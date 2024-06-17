@@ -4,41 +4,25 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: windows-2022'
 
 variables:
   buildConfiguration: 'Release'
-  rid: 'linux-x64'
 
 steps:
     - task: UseDotNet@2
+      displayName: 'Use .NET Core 6'
       inputs:
-        version: '3.1.x'
-        packageType: sdk
+        version: '6.0.x'    
+        
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
       
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build $(buildConfiguration)'
+      displayName: Build
       inputs:
-        command: 'build'
-        arguments: '-r $(rid) --configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
-
-    - task: DotNetCoreCLI@2
-      displayName: "Test"
-      inputs:
-        command: test
-        projects: '**/*tests/*.csproj'
-        arguments: '--runtime $(rid) --configuration $(buildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: "Publish"
-      inputs:
-        command: 'publish'
-        publishWebProjects: true
-        arguments: '-r $(rid) --no-build --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: true
-
-    - task: PublishBuildArtifacts@1
-      displayName: "Upload Artifacts"
-      inputs:
-        pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'hanselminutes'
+        command: Build
+        projects: '**/*.csproj'
