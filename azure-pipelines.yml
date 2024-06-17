@@ -1,28 +1,20 @@
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
-- main
+- master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: ubuntu-latest
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-    - task: UseDotNet@2
-      displayName: 'Use .NET Core 6'
-      inputs:
-        version: '6.0.x'    
-        
-    - task: DotNetCoreCLI@2
-      displayName: Restore
-      inputs:
-        command: restore
-        projects: '**/*.csproj'
-      
-    - task: DotNetCoreCLI@2
-      displayName: Build
-      inputs:
-        command: Build
-        projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  inputs: 
+    command: 'build'
+
