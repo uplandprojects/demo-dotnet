@@ -1,0 +1,5 @@
+app/.config
+app/.vs
+app/bin
+app/obj
+app/properties
