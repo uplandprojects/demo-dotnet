@@ -78,11 +78,14 @@ stages:
   jobs:
   - job: Deploy
     displayName: 'Deploy to Stage 1'
-    steps:      
+    steps:
+    - download: current
+      artifact: drop
+
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: 'DemoServiceConnection'
         appType: 'webApp'
         WebAppName: 'danhellem-demo'
-        packageForLinux: '$(outputDirectory)/**/*.zip'
+        packageForLinux: '$(Pipeline.Workspace)/drop/**/*.zip'
