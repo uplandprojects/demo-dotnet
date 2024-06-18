@@ -72,10 +72,17 @@ stages:
         PathtoPublish: '$(outputDirectory)'
         ArtifactName: 'drop'
 
-    # Optional: Deploy to Azure App Service
-    - task: AzureWebApp@1
+- stage: Deploy
+  displayName: Deploy to Azure
+  dependsOn: Publish
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy to Stage 1'
+    steps:      
+    - task: AzureRmWebAppDeployment@4
       inputs:
-        azureSubscription: '<your-service-connection>'
-        appType: 'webApp'  # Use 'webAppLinux' for Linux-based app service
-        appName: '<your-app-name>'
-        package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'DemoServiceConnection'
+        appType: 'webApp'
+        WebAppName: 'danhellem-demo'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
