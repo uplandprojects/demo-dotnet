@@ -1,0 +1,81 @@
+trigger:
+- main  # Change this to your main branch name
+
+pool:
+  vmImage: 'windows-latest'  # Use 'ubuntu-latest' if you prefer a Linux environment
+
+variables:
+  buildConfiguration: 'Release'
+  solutionFile: '**/*.sln'  # Adjust if necessary
+  outputDirectory: '$(Build.ArtifactStagingDirectory)'
+
+stages:
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: Build
+    displayName: 'Build Job'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        packageType: 'sdk'
+        version: '6.x'  # Specify the .NET version you need
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: true
+        solution: '$(solutionFile)'
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        arguments: '--configuration $(buildConfiguration) --no-restore'
+        projects: '$(solutionFile)'
+
+- stage: Test
+  displayName: 'Test Stage'
+  dependsOn: Build
+  jobs:
+  - job: Test
+    displayName: 'Test Job'
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'test'
+        arguments: '--configuration $(buildConfiguration) --no-build --logger trx'
+        projects: '$(solutionFile)'
+
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'VSTest'
+        testResultsFiles: '**/*.trx'
+        mergeTestResults: true
+
+- stage: Publish
+  displayName: 'Publish Stage'
+  dependsOn: Test
+  jobs:
+  - job: Publish
+    displayName: 'Publish Job'
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'publish'
+        arguments: '--configuration $(buildConfiguration) --output $(outputDirectory)'
+        projects: '$(solutionFile)'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(outputDirectory)'
+        ArtifactName: 'drop'
+
+    # Optional: Deploy to Azure App Service
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: '<your-service-connection>'
+        appType: 'webApp'  # Use 'webAppLinux' for Linux-based app service
+        appName: '<your-app-name>'
+        package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
