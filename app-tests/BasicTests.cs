@@ -18,7 +18,7 @@ namespace app_tests
         [TestMethod]
         public void TestMethod3()
         {
-            Assert.IsFalse(5 > 10);
+            Assert.IsTrue(5 > 10);
         }
 
         [TestMethod]
