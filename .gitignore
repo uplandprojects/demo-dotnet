@@ -3,3 +3,5 @@ app/.vs
 app/bin
 app/obj
 app/properties
+app-tests/bin
+app-tests/obj
