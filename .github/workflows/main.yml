@@ -1,0 +1,19 @@
+name: Delayed Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  delay-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Wait for 45 seconds
+      run: sleep 45
+
+    - name: Complete check
+      run: echo "Wait period is complete. Proceeding with the check."
