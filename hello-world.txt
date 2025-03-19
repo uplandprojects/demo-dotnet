@@ -1,3 +1,2 @@
 Hello World!
-Example
-testing
+Code change for contoso demo
