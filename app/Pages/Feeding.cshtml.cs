@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using app.Models;
 using app.Services;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace app.Pages;
@@ -12,12 +13,16 @@ public class FeedingModel : PageModel
     private readonly ILogger<FeedingModel> _logger;
 
     [BindProperty]
+    [Required]
     public string FoodType { get; set; } = string.Empty;
 
     [BindProperty]
+    [Required]
+    [Range(0.01, 1000.0, ErrorMessage = "Amount must be between 0.01 and 1000 grams")]
     public double Amount { get; set; }
 
     [BindProperty]
+    [Required]
     public string FishBehavior { get; set; } = string.Empty;
 
     [BindProperty]

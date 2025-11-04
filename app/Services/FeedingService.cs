@@ -1,4 +1,5 @@
 using app.Models;
+using System.Collections.Concurrent;
 using System.Text;
 using System.Text.Json;
 
@@ -6,7 +7,7 @@ namespace app.Services;
 
 public class FeedingService : IFeedingService
 {
-    private readonly List<FeedingEvent> _feedingEvents = new();
+    private readonly ConcurrentBag<FeedingEvent> _feedingEvents = new();
     private readonly ILogger<FeedingService> _logger;
 
     public FeedingService(ILogger<FeedingService> logger)
@@ -84,7 +85,8 @@ public class FeedingService : IFeedingService
         }
 
         // Check for low feeding frequency
-        if (events.Count < 2 && DateTime.Now.Subtract(events.LastOrDefault()?.Timestamp ?? DateTime.Now).Days > 2)
+        var lastFeeding = events.OrderByDescending(f => f.Timestamp).FirstOrDefault();
+        if (lastFeeding != null && DateTime.Now.Subtract(lastFeeding.Timestamp).Days > 2)
         {
             alerts.Add("Low feeding frequency detected - fish may not be eating enough");
         }
