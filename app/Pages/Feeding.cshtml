@@ -1,0 +1,151 @@
+@page
+@model app.Pages.FeedingModel
+@{
+    ViewData["Title"] = "Feeding Tracker";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4">🐟 Feeding Analytics & History</h1>
+    <p class="lead">Track your fish's feeding history and monitor their health patterns</p>
+
+    <!-- Record Feeding Form -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Record Feeding Event</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="foodType" class="form-label">Food Type</label>
+                        <input type="text" class="form-control" id="foodType" name="FoodType" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="amount" class="form-label">Amount (grams)</label>
+                        <input type="number" step="0.1" class="form-control" id="amount" name="Amount" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="behavior" class="form-label">Fish Behavior</label>
+                    <select class="form-control" id="behavior" name="FishBehavior" required>
+                        <option value="Active">Active - Eating eagerly</option>
+                        <option value="Normal">Normal - Regular appetite</option>
+                        <option value="Slow">Slow - Taking time to eat</option>
+                        <option value="Lethargic">Lethargic - Low energy</option>
+                        <option value="Not Eating">Not Eating - Refusing food</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Notes (Optional)</label>
+                    <textarea class="form-control" id="notes" name="Notes" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Record Feeding</button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Report != null)
+    {
+        <!-- Analytics Report -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h3>Feeding Analytics</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Feedings</h5>
+                                <p class="display-6">@Model.Report.TotalFeedings</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Average Amount</h5>
+                                <p class="display-6">@Model.Report.AverageAmount.ToString("F2")g</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Common Behavior</h5>
+                                <p class="display-6">@Model.Report.MostCommonBehavior</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Report.Alerts.Any())
+                {
+                    <div class="alert alert-warning mt-3">
+                        <h5>⚠️ Alerts</h5>
+                        <ul>
+                            @foreach (var alert in Model.Report.Alerts)
+                            {
+                                <li>@alert</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Feeding History -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h3>Recent Feeding History</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Report.RecentEvents.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Food Type</th>
+                                    <th>Amount</th>
+                                    <th>Behavior</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var feeding in Model.Report.RecentEvents)
+                                {
+                                    <tr>
+                                        <td>@feeding.Timestamp.ToString("g")</td>
+                                        <td>@feeding.FoodType</td>
+                                        <td>@feeding.Amount.ToString("F2")g</td>
+                                        <td>@feeding.FishBehavior</td>
+                                        <td>@feeding.Notes</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No feeding events recorded yet. Add your first feeding above!</p>
+                }
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <h3>Export Data</h3>
+            </div>
+            <div class="card-body">
+                <p>Export all feeding data for veterinary consultations or record keeping.</p>
+                <form method="post" asp-page-handler="Export">
+                    <button type="submit" class="btn btn-secondary">📥 Export Feeding Data (JSON)</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
