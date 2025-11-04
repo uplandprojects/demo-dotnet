@@ -2,10 +2,16 @@ name: Delayed Check
 
 on:
   pull_request:
+    types: [opened, reopened, edited]
     branches:
       - main
 
 jobs:
+  check-for-ab-work-item:
+    name: check   
+    runs-on: ubuntu-latest
+    steps:
+      - uses: danhellem/github-actions-pr-is-linked-to-work-item@main
   delay-check:
     runs-on: ubuntu-latest
     steps:
