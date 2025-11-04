@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-for-ab-work-item:
-    name: check   
+    name: check for linked work item
     runs-on: ubuntu-latest
     steps:
       - uses: danhellem/github-actions-pr-is-linked-to-work-item@main
