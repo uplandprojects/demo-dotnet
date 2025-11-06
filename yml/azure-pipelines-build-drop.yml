@@ -32,7 +32,7 @@ steps:
   displayName: 'dotnet publish'
   inputs:
     command: 'publish'
-    projects: 'app/app.sln'
+    projects: 'app/app.csproj'
     arguments: '--configuration Release --no-build --output $(Build.ArtifactStagingDirectory)'
     publishWebProjects: false
     zipAfterPublish: false
