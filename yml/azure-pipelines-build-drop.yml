@@ -2,10 +2,12 @@
 # This pipeline builds, tests, and publishes the .NET application
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
 steps:
 - task: DotNetCoreCLI@2
