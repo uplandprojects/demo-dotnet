@@ -32,5 +32,9 @@ dotnet run --project app/app.csproj
 - `app-tests/` - Unit tests 🧪
 - `azure-pipelines.yml` - CI/CD pipeline ☁️
 
+## 👥 Contributors
+
+We welcome contributions from the community! Thank you to all our contributors who help make this project better.
+
 ---
 Made with ❤️ using .NET
