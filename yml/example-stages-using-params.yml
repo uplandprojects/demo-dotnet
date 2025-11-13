@@ -1,0 +1,28 @@
+trigger:
+- main
+
+parameters:
+- name: deployments
+  type: object
+  default:
+    - name: Testing
+      id: Testing
+    - name: Staging
+      id: Staging
+    - name: Canary
+      id: Canary
+    - name: Production East
+      id: Production_East
+    - name: Production West
+      id: Production_West
+
+stages:
+- ${{ each d in parameters.deployments }}:
+  - stage: SU_${{ d.id }}
+    displayName: ${{ d.name }}
+    jobs:
+    - job: job_${{ d.id }}
+      displayName: First job
+      steps:
+      - script: sleep 1
+        displayName: First sleep
