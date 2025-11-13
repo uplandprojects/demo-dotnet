@@ -1,0 +1,81 @@
+# azure-pipelines.yml
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Development
+  displayName: Development
+  jobs:
+  - job: DevelopmentJob
+    steps:
+    - script: echo Hello Development!
+      displayName: 'Run a one-line script for "Development"'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script for "Development"'
+
+- stage: Test
+  displayName: Test
+  dependsOn: Development
+  jobs:
+  - job: TestJob
+    steps:
+    - script: sleep 120
+      displayName: 'Wait 2 minutes before "Test"'
+    - script: echo Hello Test!
+      displayName: 'Run a one-line script for "Test"'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script for "Test"'
+
+- stage: Canary
+  displayName: Canary
+  dependsOn: Test
+  jobs:
+  - job: CanaryJob
+    steps:
+    - script: sleep 120
+      displayName: 'Wait 2 minutes before "Canary"'
+    - script: echo Hello Canary!
+      displayName: 'Run a one-line script for "Canary"'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script for "Canary"'
+
+- stage: Production_East
+  displayName: 'Production East'
+  dependsOn: Canary
+  jobs:
+  - job: ProductionEastJob
+    # environment: 'production-east'   # keep approvals on the environment
+    steps:
+    - script: sleep 120
+      displayName: 'Wait 2 minutes before "Production East"'
+    - script: echo Hello Production East!
+      displayName: 'Run a one-line script for "Production East"'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script for "Production East"'
+
+- stage: Production_West
+  displayName: 'Production West'
+  dependsOn: Production_East
+  jobs:
+  - job: ProductionWestJob
+    # environment: 'production-west'   # keep approvals on the environment
+    steps:
+    - script: sleep 120
+      displayName: 'Wait 2 minutes before "Production West"'
+    - script: echo Hello Production West!
+      displayName: 'Run a one-line script for "Production West"'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script for "Production West"'
