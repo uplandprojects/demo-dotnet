@@ -7,19 +7,14 @@ on:
       - main
 
 jobs:
-  check-for-ab-work-item:
-    name: check for linked work item
-    runs-on: ubuntu-latest
-    steps:
-      - uses: danhellem/github-actions-pr-is-linked-to-work-item@main
   delay-check:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Wait for 45 seconds
-      run: sleep 45
+    - name: Wait for 30 seconds
+      run: sleep 30
 
     - name: Complete check
       run: echo "Wait period is complete. Proceeding with the check."
