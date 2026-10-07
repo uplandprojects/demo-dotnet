@@ -33,6 +33,20 @@ namespace app_tests
         }
 
         [TestMethod]
+        public void Test_Failure_One()
+        {
+            // Assert
+            Assert.IsFalse(true);
+        }
+
+        [TestMethod]
+        public void Test_Failure_Two()
+        {
+            // Assert
+            Assert.IsNotNull(null);
+        }       
+        
+        [TestMethod]
         public void ShowRequestId_ReturnsFalse_WhenRequestIdIsNull()
         {
             // Arrange
